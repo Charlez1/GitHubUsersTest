@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">GitHubUsersTest</string>
+
+    <string name="followers_count">%d подписчиков</string>
+    <string name="repositories_count">%d репозиториев</string>
+
+
+    <string name="users">Пользователи</string>
+    <string name="followers">Подписчики</string>
+    <string name="info">Информация</string>
+
+</resources>
