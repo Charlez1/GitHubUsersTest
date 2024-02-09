@@ -12,14 +12,12 @@ class GitHubRepositoryImpl @Inject constructor(
     private val apiService: GithubApiService
 ) : GitHubRepository {
 
-    override suspend fun getUserList(): List<UserListItem> = coroutineScope {
+    override suspend fun getUserList(): List<UserListItem>  {
         val loginList = apiService.getAllUsers()
         val userList = loginList.map { loginItem ->
-            async {
-                apiService.getUserByLogin(loginItem.login).toUserListItem()
-            }
+            apiService.getUserByLogin(loginItem.login).toUserListItem()
         }
-        return@coroutineScope userList.awaitAll()
+        return userList
     }
 
     override suspend fun getUserInfoByLogin(login: String): UserDataInfo {
