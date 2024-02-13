@@ -9,6 +9,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -23,7 +24,11 @@ class UserListViewModel @Inject constructor(
     fun loadUserList() {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _userList.value = repository.getUserList()
+                repository.getUserList().collect {
+                    _userList.update { currentList ->
+                        currentList + it
+                    }
+                }
             } catch (e: Exception) {
                 //todo
             }

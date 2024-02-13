@@ -10,6 +10,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -27,8 +28,19 @@ class UserInfoViewModel @Inject constructor(
     fun loadUserInfo(login: String) {
         viewModelScope.launch(Dispatchers.IO) {
             try {
-                _followerList.value = repository.getFollowersByLogin(login)
-                _userInfo.value = repository.getUserInfoByLogin(login)
+                repository.getFollowersByLogin(login).collect {
+                    _followerList.update { currentList ->
+                        currentList + it
+                    }
+                }
+            } catch (e: Exception) {
+                //todo
+            }
+        }
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                val userInfo = repository.getUserInfoByLogin(login)
+                _userInfo.value = userInfo
             } catch (e: Exception) {
                 //todo
             }
